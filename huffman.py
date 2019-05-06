@@ -1,4 +1,20 @@
 import sys
+from config import user_email,user_pass
+import json
+import smtplib
+
+def sendEmail(dic,to_email):
+    message="You can convert the unicode, we're not FBI\n"
+    message+=json.dumps(dic,indent=4)
+    try:
+        server=smtplib.SMTP_SSL('smtp.gmail.com',465)
+        server.login(user_email,user_pass)
+        server.sendmail(user_email,to_email,message)
+        server.close()
+        print("Email Sent")
+    except:
+        print("something went wrong")
+
 
 
 class Node():
@@ -21,7 +37,12 @@ def huffman_traversal(NodeObj,myarr):
             huffman_traversal(NodeObj.right,myarr)
     return myarr
 
-
+def saveToFile(str,fileName):
+    try:
+        f=open(fileName,"w+")
+    except:
+        print(fileName, "File cannot be updated")
+    f.write(str)
 
 def stringToObjList(str):
     all_freq = {} 
@@ -58,7 +79,6 @@ def ObjListToTree(charObj):
     return charObj
 
 def checkStrOrFile(str):
-    print(str[-4:])
     if(str[-4:]==".txt"):
          f=open(str,"r")
          str=f.read()
@@ -67,16 +87,35 @@ def checkStrOrFile(str):
         return str
 
 if __name__ == "__main__": 
+    print("                  Welcome to File Encrypter            ")
+    dist_email=input("Please write to email: ")
+    print("Encrypting Your File and sending to ",dist_email)
     str=sys.argv[1]
+    dist_file=sys.argv[2]
     str=checkStrOrFile(str)
     charObj=stringToObjList(str)
     charObj=ObjListToTree(charObj)
     letter_code={}
+    dict_of_letter_codes={}
     letter_code=huffman_traversal(charObj[0],myarr=letter_code)
-    enrypted_str=""
+    encrypted_str=""
     for i in str:
         if(i==" "):
-            enrypted_str+="  "
+            encrypted_str+="  "
         else:
-            enrypted_str+=" "+letter_code[i]
-    print(enrypted_str)
+            encrypted_str+=" "+letter_code[i]
+            dict_of_letter_codes[i]=letter_code[i]
+
+    saveToFile(encrypted_str,dist_file)
+    sendEmail(dict_of_letter_codes,dist_email)
+    print("TASK COMPLETED")
+    print("""
+        This Project is made by:
+        Lakshya Khera (9917103014)
+        Gaurav Singh Parihar (9917103015)
+        Shubham Tak (9917103031)
+        Naman
+
+        Made in Love with Python and Linux <3
+    """)
+    
