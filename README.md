@@ -2,6 +2,8 @@
 
 This mini-project is for the Algorithms and Problem Solving, it converts string or txt file  into 🐍 and 🐘 and sends the code of each letter of decryption to user defined email. 
 
+Required  Python 2.7+
+
 <h3>How to Run this File</h3>
 <ul>
 <li>Fork this repo</li>
